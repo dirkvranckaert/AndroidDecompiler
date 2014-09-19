@@ -17,12 +17,14 @@ The tools has been built on Mac, but should work on all UNIX environments!
 
 Usage
 -----
+```
 decompileAPK.sh <APK-file> [output-dir]
 Parameters:
  APK-file               The first parameter is required to be a valid APK file!
  Output Dir             The output directory is optional. If not set the
                          default will be used which is 'output' in the 
                          root of this tool directory.
+```
 
 Contributions
 -------------
