@@ -34,4 +34,5 @@ This tool has been released under the Apache License 2.0.
 - Dex2Jar is licensed under the Apache License 2.0.
 - android-apktool is licensed under the Apache License 2.0
 - JD-Core-Java is licensed under the MIT License
+
 This project may be freely used for personal needs in a commercial or non-commercial environments.
