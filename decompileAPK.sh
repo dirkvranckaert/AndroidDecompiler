@@ -4,6 +4,8 @@
 apkfile=$1
 outputDir=$2
 
+DOE="`dirname \"$0\"`"
+
 # Check a the minimum set of parameters is present. If not show help...
 if [ -z $apkfile]
 then
@@ -23,7 +25,7 @@ fi
 # Check for the output directory. If not custom set, use the default
 if [ -z $outputDir]
 then
-    outputDir="output"
+    outputDir="$DOE/output"
 else
     outputDir="$outputDir/output"
 fi
@@ -35,21 +37,21 @@ echo ""
 
 # Cleanup the output directories
 echo "Cleaning up the output directories"
-rm -Rf output
-rm -Rf output-res
+rm -Rf $DOE/output
+rm -Rf $DOE/output-res
 rm -Rf $outputDir
 mkdir -p $outputDir
 
 # Create JAR from APK file, then decompile that JAR to have Java files
 echo "Extracting JAR file from APK"
-sh dex2jar/d2j-dex2jar.sh -o $outputDir/output.jar $apkfile
+sh $DOE/dex2jar/d2j-dex2jar.sh -o $outputDir/output.jar $apkfile
 echo "Decompiling JAR for Java files"
-java -jar jd-core-java/jd-core-java-1.2.jar $outputDir/output.jar $outputDir/src
+java -jar $DOE/jd-core-java/jd-core-java-1.2.jar $outputDir/output.jar $outputDir/src
 rm $outputDir/output.jar
 
 # Extract all resources from the APK and remove all the unnecessary files from the output
 echo "Extracting resources from APK file"
-java -jar apktool/apktool.jar decode -f $apkfile $resOutputDir
+java -jar $DOE/apktool/apktool.jar decode -f $apkfile $resOutputDir
 rm -Rf $resOutputDir/smali
 rm $resOutputDir/apktool.yml
 
