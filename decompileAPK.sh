@@ -7,9 +7,12 @@ function help
   echo "decompileAPK -- Decompiles an APK to have both the APK source and resources (XML
                 , 9-patches,...) decompiled."
   echo ""
-  echo "usage: decompileAPK.sh [options] <APK-file> [output-dir]"
+  echo "usage: decompileAPK.sh [options] <APK-file>"
   echo ""
   echo "options:"
+  echo " -o,--output <dir>	The output directory is optional. If not set the
+                         default will be used which is 'output' in the 
+                         root of this tool directory."
   echo " -f,--format		Will format all Java files to be easier readable. 
   			 However, use with CAUTION! This option might change 
   			 line numbers!"
@@ -17,19 +20,20 @@ function help
   echo " -h,--help		Prints this help message"
   echo ""
   echo "parameters:"
-  echo " APK-file               The first parameter is required to be a valid APK file!"
-  echo " Output Dir             The output directory is optional. If not set the
-                         default will be used which is 'output' in the 
-                         root of this tool directory."
+  echo " APK-file               A valid APK file is required as input"
 }
 
 #Init values
 generateProject=false
 formatJava=false
+outputDir=
 
 # Check all of the possible options
 while [[ "$1" == -* ]]; do
     case $1 in
+        -o | --output )         shift
+        						outputDir=$1
+                                ;;
         -p | --project )        generateProject=true
                                 ;;
         -f | --format )         formatJava=true
@@ -43,7 +47,6 @@ done
 
 # Read parameters
 apkfile=$1
-outputDir=$2
 
 # Check a the minimum set of parameters is present. If not show help...
 if [ -z $apkfile ]
