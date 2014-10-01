@@ -1,29 +1,53 @@
 #!/bin/sh
 
-# Read parameters
-apkfile=$1
-outputDir=$2
-
 DOE="`dirname \"$0\"`"
 
-# Check a the minimum set of parameters is present. If not show help...
-if [ -z $apkfile]
-then
+function help
+{
   echo "decompileAPK -- Decompiles an APK to have both the APK source and resources (XML
                 , 9-patches,...) decompiled."
   echo ""
-  echo "Usage: decompileAPK.sh <APK-file> [output-dir]"
+  echo "usage: decompileAPK.sh [options] <APK-file> [output-dir]"
   echo ""
-  echo "Parameters:"
+  echo "options:"
+  echo " -p,--project		Will generate a Gradle-based Android project for you"
+  echo " -h,--help		Prints this help message"
+  echo ""
+  echo "parameters:"
   echo " APK-file               The first parameter is required to be a valid APK file!"
   echo " Output Dir             The output directory is optional. If not set the
                          default will be used which is 'output' in the 
                          root of this tool directory."
-  exit;
+}
+
+#Init values
+generateProject=false
+
+# Check all of the possible options
+while [[ "$1" == -* ]]; do
+    case $1 in
+        -p | --project )        generateProject=true
+                                ;;
+        -h | --help )           help
+                                exit
+                                ;;
+    esac
+    shift
+done
+
+# Read parameters
+apkfile=$1
+outputDir=$2
+
+# Check a the minimum set of parameters is present. If not show help...
+if [ -z $apkfile ]
+then
+  help
+  exit
 fi
 
 # Check for the output directory. If not custom set, use the default
-if [ -z $outputDir]
+if [ -z $outputDir ]
 then
     outputDir="$DOE/output"
 else
