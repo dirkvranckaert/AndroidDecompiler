@@ -7,8 +7,11 @@ outputDir=$2
 # Check a the minimum set of parameters is present. If not show help...
 if [ -z $apkfile]
 then
-  echo "decompileAPK -- Decompiles an APK to have both the APK source and resources (XML, 9-patches,...) decompiled."
-  echo "usage: decompileAPK.sh <APK-file> [output-dir]"
+  echo "decompileAPK -- Decompiles an APK to have both the APK source and resources (XML
+                , 9-patches,...) decompiled."
+  echo ""
+  echo "Usage: decompileAPK.sh <APK-file> [output-dir]"
+  echo ""
   echo "Parameters:"
   echo " APK-file               The first parameter is required to be a valid APK file!"
   echo " Output Dir             The output directory is optional. If not set the
