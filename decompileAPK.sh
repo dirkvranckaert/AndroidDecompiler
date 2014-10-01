@@ -10,6 +10,9 @@ function help
   echo "usage: decompileAPK.sh [options] <APK-file> [output-dir]"
   echo ""
   echo "options:"
+  echo " -f,--format		Will format all Java files to be easier readable. 
+  			 However, use with CAUTION! This option might change 
+  			 line numbers!"
   echo " -p,--project		Will generate a Gradle-based Android project for you"
   echo " -h,--help		Prints this help message"
   echo ""
@@ -22,11 +25,14 @@ function help
 
 #Init values
 generateProject=false
+formatJava=false
 
 # Check all of the possible options
 while [[ "$1" == -* ]]; do
     case $1 in
         -p | --project )        generateProject=true
+                                ;;
+        -f | --format )         formatJava=true
                                 ;;
         -h | --help )           help
                                 exit
@@ -117,6 +123,12 @@ then
 	cp $DOE/files/project/* $baseOutputDir/
 	cp $DOE/files/wrapper/* $baseOutputDir/gradle/wrapper
 	cp $DOE/files/module/* $baseOutputDir/$moduleName
+fi
+
+if [[ "$formatJava" == true ]]; 
+then
+	echo "Start formatting all Java files"
+	$DOE/astyle/build/mac/bin/astyle -r -n -q --style=java -s4 -xc -S -K -j $outputDir/*.java
 fi
 
 exit;
