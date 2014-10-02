@@ -45,6 +45,30 @@ then
   exit
 fi
 
+echo "Did you update the help option with the new features being released (N)?"
+read questionHelpOptionUpdated
+if [ "$questionHelpOptionUpdated" != "Y" ] && [ "$questionHelpOptionUpdated" != "y" ]
+then
+	echo "Update and commit (and push) the changes before trying again"
+	exit;
+fi
+
+echo "Did you update the README with everything that is important for this new release (N)?"
+read questionReadmeUpdated
+if [ "$questionReadmeUpdated" != "Y" ] && [ "$questionReadmeUpdated" != "y" ]
+then
+	echo "Update and commit (and push) the changes before trying again"
+	exit;
+fi
+
+echo "Did you commit and push any other changes (eg: release script) (N)?"
+read questionEverythingPushed
+if [ "$questionEverythingPushed" != "Y" ] && [ "$questionEverythingPushed" != "y" ]
+then
+	echo "Commit and push all your changes before trying again"
+	exit;
+fi
+
 echo "Releasing version $version to directory $outputDir"
 echo ""
 
