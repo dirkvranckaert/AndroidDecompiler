@@ -26,6 +26,8 @@ function help
 #Init values
 generateProject=false
 formatJava=false
+skipResources=false
+skipJava=false
 outputDir=
 
 # Check all of the possible options
@@ -33,6 +35,10 @@ while [[ "$1" == -* ]]; do
     case $1 in
         -o | --output )         shift
         						outputDir=$1
+                                ;;
+        --skipResources )       skipResources=true
+                                ;;
+        --skipJava )        	skipJava=true
                                 ;;
         -p | --project )        generateProject=true
                                 ;;
@@ -93,45 +99,56 @@ then
 	outputDir="$outputDir/$moduleName/src/main/java"
 fi
 
-# Create JAR from APK file, then decompile that JAR to have Java files
-echo "Extracting JAR file from APK"
-sh $DOE/dex2jar/d2j-dex2jar.sh -o $outputDir/output.jar $apkfile
-echo "Decompiling JAR for Java files"
-if [[ "$generateProject" == true ]]; 
+if [[ "$skipJava" == false ]]; 
 then
-	java -jar $DOE/jd-core-java/jd-core-java-1.2.jar $outputDir/output.jar $outputDir
+	# Create JAR from APK file, then decompile that JAR to have Java files
+	echo "Extracting JAR file from APK"
+	sh $DOE/dex2jar/d2j-dex2jar.sh -o $outputDir/output.jar $apkfile
+	echo "Decompiling JAR for Java files"
+	if [[ "$generateProject" == true ]]; 
+	then
+		java -jar $DOE/jd-core-java/jd-core-java-1.2.jar $outputDir/output.jar $outputDir
+	else
+		java -jar $DOE/jd-core-java/jd-core-java-1.2.jar $outputDir/output.jar $outputDir/src
+	fi
+	rm $outputDir/output.jar
+	
+	if [[ "$formatJava" == true ]]; 
+	then
+		echo "Start formatting all Java files"
+		$DOE/astyle/build/mac/bin/astyle -r -n -q --style=java -s4 -xc -S -K -j $outputDir/*.java
+	fi
 else
-	java -jar $DOE/jd-core-java/jd-core-java-1.2.jar $outputDir/output.jar $outputDir/src
+	echo "Skipping decompilation of JAVA files"
 fi
-rm $outputDir/output.jar
 
-# Extract all resources from the APK and remove all the unnecessary files from the output
-echo "Extracting resources from APK file"
-java -jar $DOE/apktool/apktool.jar decode -f $apkfile $resOutputDir
-rm -Rf $resOutputDir/smali
-rm $resOutputDir/apktool.yml
-
-if [[ "$generateProject" == true ]]; 
+if [[ "$skipResources" == false ]]; 
 then
-	# Move the resource-output to correct project directory
-	mv $resOutputDir/* $baseOutputDir/$moduleName/src/main/	
+	# Extract all resources from the APK and remove all the unnecessary files from the output
+	echo "Extracting resources from APK file"
+	java -jar $DOE/apktool/apktool.jar decode -f $apkfile $resOutputDir
+	rm -Rf $resOutputDir/smali
+	rm $resOutputDir/apktool.yml
+
+	if [[ "$generateProject" == true ]]; 
+	then
+		# Move the resource-output to correct project directory
+		mv $resOutputDir/* $baseOutputDir/$moduleName/src/main/	
+	else
+		# Move the resource-output to output directory
+		mv $resOutputDir/* $outputDir
+	fi
+	rm -Rf $resOutputDir
 else
-	# Move the resource-output to output directory
-	mv $resOutputDir/* $outputDir
+	echo "Skipping decompilation of resources"
 fi
-rm -Rf $resOutputDir
 
 if [[ "$generateProject" == true ]]; 
 then
+	echo "Copying all Gradle project files in the decompiled project"
 	cp $DOE/files/project/* $baseOutputDir/
 	cp $DOE/files/wrapper/* $baseOutputDir/gradle/wrapper
 	cp $DOE/files/module/* $baseOutputDir/$moduleName
-fi
-
-if [[ "$formatJava" == true ]]; 
-then
-	echo "Start formatting all Java files"
-	$DOE/astyle/build/mac/bin/astyle -r -n -q --style=java -s4 -xc -S -K -j $outputDir/*.java
 fi
 
 exit;
