@@ -18,6 +18,7 @@ function help
 version=
 outputDir=
 temp=
+openOutputDir=false
 
 # Check all of the possible options
 while [[ "$1" == -* ]]; do
@@ -27,6 +28,8 @@ while [[ "$1" == -* ]]; do
                                 ;;
         -d | --dir )        	shift
         						outputDir=$1
+                                ;;
+        -o | --open )        	openOutputDir=true
                                 ;;
         -h | --help )           help
                                 exit
@@ -66,5 +69,10 @@ zip -r $outputDir/AndroidDecompiler-$version.zip ./*
 tar -cvf $outputDir/AndroidDecompiler-$version.tar.gz ./*
 popd
 rm -Rf $temp
+
+if [[ "$openOutputDir" == true ]];
+then
+	open $outputDir
+fi
 
 exit;
