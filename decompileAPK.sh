@@ -13,6 +13,8 @@ function help
   echo " -o,--output <dir>	The output directory is optional. If not set the
                          default will be used which is 'output' in the 
                          root of this tool directory."
+  echo " --skipResources	Do not decompile the resource files"
+  echo " --skipJava		Do not decompile the JAVA files"
   echo " -f,--format		Will format all Java files to be easier readable. 
   			 However, use with CAUTION! This option might change 
   			 line numbers!"
