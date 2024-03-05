@@ -1,7 +1,7 @@
 Android Decompiler
 ==================
 
-The Android Decompile is a script that combines different tools for succesfully decompiling any Android package (APK) to it's Java source-code and resources (including the AndroidManifest.xml, 9-patches, layout files,...).
+The Android Decompile is a script that combines different tools for successfully decompiling any Android package (APK) to it's Java source-code and resources (including the AndroidManifest.xml, 9-patches, layout files,...).
 
 Tools
 -----
@@ -40,7 +40,7 @@ parameters:
 
 Contributions
 -------------
-Any pull requests submitted will be looked at and if it really adds any aditional value they will be accepted. Any change-ideas are welcome!
+Any pull requests submitted will be looked at and if it really adds any additional value they will be accepted. Any change-ideas are welcome!
 
 License
 -------
